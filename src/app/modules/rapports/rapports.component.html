@@ -1,0 +1,736 @@
+<!-- 🚀 MODULE RAPPORTS AVANCÉ - PILOTE QUALITÉ -->
+<div class="rapports-container">
+  
+  <!-- 📊 HEADER MODERNE AVEC ACTIONS RAPIDES -->
+  <div class="rapports-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="navigation-section">
+          <button mat-icon-button (click)="retourDashboard()" class="back-btn" matTooltip="Retour au Dashboard">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div class="breadcrumb">
+            <span class="breadcrumb-item" (click)="retourDashboard()">Dashboard Fiche-Suivi</span>
+            <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+            <span class="breadcrumb-current">Rapports & Analytics</span>
+          </div>
+        </div>
+        <h1>
+          <mat-icon class="header-icon">analytics</mat-icon>
+          Rapports & Analytics Qualité
+        </h1>
+        <p class="subtitle">Dashboard complet avec KPI, graphiques et exports avancés</p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="exportPDF()" class="action-btn">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Export PDF
+        </button>
+        <button mat-raised-button color="accent" (click)="exportExcel()" class="action-btn">
+          <mat-icon>table_chart</mat-icon>
+          Export Excel
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="actionsMenu" class="more-actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="imprimerRapport()">
+            <mat-icon>print</mat-icon>
+            Imprimer
+          </button>
+          <button mat-menu-item (click)="partagerRapport()">
+            <mat-icon>share</mat-icon>
+            Partager
+          </button>
+          <button mat-menu-item (click)="planifierRapport()">
+            <mat-icon>schedule</mat-icon>
+            Planifier
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚡ LOADING STATE -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <h3>Génération des rapports en cours...</h3>
+    <p>Analyse des données qualité et calcul des KPI</p>
+  </div>
+
+  <!-- 📈 CONTENU PRINCIPAL -->
+  <div *ngIf="!loading" class="rapports-content">
+    
+    <!-- 🎛️ FILTRES ET CONTRÔLES AVANCÉS - VERSION AMÉLIORÉE -->
+    <mat-card class="filters-card-improved">
+      <div class="filters-header">
+        <div class="filters-title">
+          <mat-icon>tune</mat-icon>
+          <span>Filtres & Paramètres</span>
+        </div>
+        <button mat-icon-button (click)="toggleFilters()" class="toggle-filters-btn">
+          <mat-icon>{{ filtresOuverts ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </div>
+      
+      <div class="filters-content" [class.expanded]="filtresOuverts">
+        <div class="filters-grid">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Période d'analyse</mat-label>
+            <mat-select [(value)]="periodeSelectionnee" (selectionChange)="onPeriodeChange()">
+              <mat-option value="1">Dernier mois</mat-option>
+              <mat-option value="3">3 derniers mois</mat-option>
+              <mat-option value="6">6 derniers mois</mat-option>
+              <mat-option value="12">Dernière année</mat-option>
+              <mat-option value="custom">Période personnalisée</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Type d'analyse</mat-label>
+            <mat-select [(value)]="typeAnalyseSelectionne" (selectionChange)="onTypeAnalyseChange()">
+              <mat-option value="ALL">Toutes les analyses</mat-option>
+              <mat-option value="CONFORMITE">Conformité</mat-option>
+              <mat-option value="PERFORMANCE">Performance</mat-option>
+              <mat-option value="RISQUES">Gestion des risques</mat-option>
+              <mat-option value="DELAIS">Délais de traitement</mat-option>
+              <mat-option value="QUALITE">Indicateurs qualité</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Département</mat-label>
+            <mat-select [(value)]="departementSelectionne" (selectionChange)="onDepartementChange()">
+              <mat-option value="ALL">Tous les départements</mat-option>
+              <mat-option value="PRODUCTION">Production</mat-option>
+              <mat-option value="QUALITE">Qualité</mat-option>
+              <mat-option value="LOGISTIQUE">Logistique</mat-option>
+              <mat-option value="RH">Ressources Humaines</mat-option>
+              <mat-option value="IT">Informatique</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="filter-actions">
+            <button mat-raised-button color="primary" (click)="appliquerFiltres()" class="apply-btn">
+              <mat-icon>filter_alt</mat-icon>
+              Appliquer
+            </button>
+            <button mat-stroked-button (click)="reinitialiserFiltres()" class="reset-btn">
+              <mat-icon>clear</mat-icon>
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- 📊 KPI ET MÉTRIQUES PRINCIPALES -->
+    <div class="kpi-section">
+      <h2 class="section-title">
+        <mat-icon>dashboard</mat-icon>
+        Indicateurs Clés de Performance (KPI)
+      </h2>
+      
+      <div class="kpi-grid">
+        <div class="kpi-card conformite" (click)="voirDetailKPI('conformite')">
+          <div class="kpi-icon">
+            <mat-icon>verified</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ tauxConformiteGlobal }}%</div>
+            <div class="kpi-label">Taux de Conformité</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              +2.3%
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card performance" (click)="voirDetailKPI('performance')">
+          <div class="kpi-icon">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ scorePerformanceGlobal }}%</div>
+            <div class="kpi-label">Score Performance</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              +1.8%
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card delais" (click)="voirDetailKPI('delais')">
+          <div class="kpi-icon">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ delaiMoyenTraitement }}</div>
+            <div class="kpi-label">Délai Moyen (jours)</div>
+            <div class="kpi-trend negative">
+              <mat-icon>trending_down</mat-icon>
+              -0.5j
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card risques" (click)="voirDetailKPI('risques')">
+          <div class="kpi-icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ nombreFichesEnRetard }}</div>
+            <div class="kpi-label">Fiches en Retard</div>
+            <div class="kpi-trend" [class.positive]="nombreFichesEnRetard <= 5" [class.negative]="nombreFichesEnRetard > 5">
+              <mat-icon>{{ nombreFichesEnRetard <= 5 ? 'trending_down' : 'trending_up' }}</mat-icon>
+              {{ nombreFichesEnRetard <= 5 ? '-2' : '+3' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📈 GRAPHIQUES ET ANALYSES -->
+    <div class="charts-section">
+      <h2 class="section-title">
+        <mat-icon>insert_chart</mat-icon>
+        Analyses Graphiques
+      </h2>
+
+      <mat-tab-group class="charts-tabs" animationDuration="300ms">
+        
+        <!-- TAB 1: CONFORMITÉ -->
+        <mat-tab label="Conformité">
+          <div class="tab-content">
+            <div class="charts-grid">
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Évolution de la Conformité</mat-card-title>
+                  <mat-card-subtitle>Tendance mensuelle sur 12 mois</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #conformiteChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Répartition par Statut</mat-card-title>
+                  <mat-card-subtitle>Distribution actuelle</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #statutChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- TAB 2: PERFORMANCE -->
+        <mat-tab label="Performance">
+          <div class="tab-content">
+            <div class="charts-grid">
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Performance par Processus</mat-card-title>
+                  <mat-card-subtitle>Comparaison des départements</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #performanceChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Tendance Globale</mat-card-title>
+                  <mat-card-subtitle>Évolution des KPI</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #tendanceChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- TAB 3: RISQUES -->
+        <mat-tab label="Gestion des Risques">
+          <div class="tab-content">
+            <div class="charts-grid">
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Matrice des Risques</mat-card-title>
+                  <mat-card-subtitle>Impact vs Probabilité</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #risqueChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>Délais de Traitement</mat-card-title>
+                  <mat-card-subtitle>Distribution et moyennes</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #delaiChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- TAB 4: TABLEAU DE BORD -->
+        <mat-tab label="Dashboard Exécutif">
+          <div class="tab-content">
+            <div class="executive-dashboard">
+              <mat-card class="dashboard-card">
+                <mat-card-header>
+                  <mat-card-title>Vue d'Ensemble Exécutive</mat-card-title>
+                  <mat-card-subtitle>Synthèse pour la direction</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="executive-grid">
+                    <div class="executive-metric">
+                      <div class="metric-header">
+                        <mat-icon>trending_up</mat-icon>
+                        <span>Tendance Qualité</span>
+                      </div>
+                      <div class="metric-value success">{{ indicateurTendance }}</div>
+                      <div class="metric-description">Amélioration continue observée</div>
+                    </div>
+
+                    <div class="executive-metric">
+                      <div class="metric-header">
+                        <mat-icon>security</mat-icon>
+                        <span>Niveau de Risque</span>
+                      </div>
+                      <div class="metric-value" [class]="getRisqueClass()">{{ niveauRisqueGlobal }}</div>
+                      <div class="metric-description">Évaluation globale des risques</div>
+                    </div>
+
+                    <div class="executive-metric">
+                      <div class="metric-header">
+                        <mat-icon>assignment_turned_in</mat-icon>
+                        <span>Fiches Traitées</span>
+                      </div>
+                      <div class="metric-value">{{ fichesQualiteTerminees + fichesSuiviTerminees }}</div>
+                      <div class="metric-description">Total des fiches complétées</div>
+                    </div>
+
+                    <div class="executive-metric">
+                      <div class="metric-header">
+                        <mat-icon>hourglass_empty</mat-icon>
+                        <span>En Cours</span>
+                      </div>
+                      <div class="metric-value warning">{{ fichesQualiteEnCours + fichesSuiviEnCours }}</div>
+                      <div class="metric-description">Fiches en traitement</div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="chart-card full-width">
+                <mat-card-header>
+                  <mat-card-title>KPI Consolidés</mat-card-title>
+                  <mat-card-subtitle>Vue d'ensemble des indicateurs</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-container">
+                    <canvas #kpiChart></canvas>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <!-- 📋 RAPPORTS GÉNÉRÉS -->
+    <div class="reports-section">
+      <h2 class="section-title">
+        <mat-icon>description</mat-icon>
+        Rapports Générés
+        <button mat-raised-button color="primary" (click)="genererNouveauRapport()" class="generate-btn">
+          <mat-icon>add</mat-icon>
+          Nouveau Rapport
+        </button>
+      </h2>
+
+      <mat-card class="reports-table-card">
+        <mat-card-content>
+          <table mat-table [dataSource]="rapportsGeneres" class="reports-table" matSort>
+            
+            <ng-container matColumnDef="titre">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+              <td mat-cell *matCellDef="let rapport">
+                <div class="rapport-title">
+                  <mat-icon>{{ getRapportIcon(rapport.type) }}</mat-icon>
+                  {{ rapport.titre }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+              <td mat-cell *matCellDef="let rapport">
+                <mat-chip [color]="getRapportTypeColor(rapport.type)" selected>
+                  {{ rapport.type }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateGeneration">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Génération</th>
+              <td mat-cell *matCellDef="let rapport">{{ rapport.dateGeneration | date:'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="statut">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+              <td mat-cell *matCellDef="let rapport">
+                <mat-chip [color]="getStatutColor(rapport.statut)" selected>
+                  {{ rapport.statut }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="taille">
+              <th mat-header-cell *matHeaderCellDef>Taille</th>
+              <td mat-cell *matCellDef="let rapport">{{ rapport.taille }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let rapport">
+                <div class="action-buttons">
+                  <button mat-icon-button color="primary" 
+                          (click)="telechargerRapport(rapport)"
+                          matTooltip="Télécharger">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                  <button mat-icon-button color="accent" 
+                          (click)="previsualiserRapport(rapport)"
+                          matTooltip="Prévisualiser">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button 
+                          [matMenuTriggerFor]="rapportMenu"
+                          matTooltip="Plus d'actions">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #rapportMenu="matMenu">
+                    <button mat-menu-item (click)="partagerRapport(rapport)">
+                      <mat-icon>share</mat-icon>
+                      Partager
+                    </button>
+                    <button mat-menu-item (click)="dupliquerRapport(rapport)">
+                      <mat-icon>content_copy</mat-icon>
+                      Dupliquer
+                    </button>
+                    <button mat-menu-item (click)="archiverRapport(rapport)">
+                      <mat-icon>archive</mat-icon>
+                      Archiver
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="supprimerRapport(rapport)" class="delete-action">
+                      <mat-icon>delete</mat-icon>
+                      Supprimer
+                    </button>
+                  </mat-menu>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                class="rapport-row" 
+                (click)="selectionnerRapport(row)"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" 
+                         showFirstLastButtons
+                         aria-label="Sélectionner la page des rapports">
+          </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- 🔔 ALERTES ET NOTIFICATIONS -->
+    <div class="alerts-section">
+      <h2 class="section-title">
+        <mat-icon>notifications</mat-icon>
+        Alertes & Notifications
+        <div class="alert-badges">
+          <mat-chip color="warn" selected *ngIf="alertesCritiques > 0">
+            {{ alertesCritiques }} Critiques
+          </mat-chip>
+          <mat-chip color="accent" selected *ngIf="alertesImportantes > 0">
+            {{ alertesImportantes }} Importantes
+          </mat-chip>
+        </div>
+      </h2>
+
+      <div class="alerts-grid">
+        <mat-card class="alert-card critical" *ngFor="let alerte of alertes">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon [color]="getAlerteColor(alerte.niveau)">
+                {{ getAlerteIcon(alerte.niveau) }}
+              </mat-icon>
+              {{ alerte.titre }}
+            </mat-card-title>
+            <mat-card-subtitle>{{ alerte.dateCreation | date:'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ alerte.description }}</p>
+            <div class="alert-actions">
+              <button mat-button color="primary" (click)="traiterAlerte(alerte)">
+                <mat-icon>check</mat-icon>
+                Traiter
+              </button>
+              <button mat-button (click)="reporterAlerte(alerte)">
+                <mat-icon>schedule</mat-icon>
+                Reporter
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🚫 ÉTAT VIDE -->
+  <div *ngIf="!loading && totalFichesQualite === 0 && totalFichesSuivi === 0" class="empty-state">
+    <mat-icon>analytics</mat-icon>
+    <h3>Aucune donnée disponible</h3>
+    <p>Commencez par créer des fiches qualité et de suivi pour générer des rapports</p>
+    <button mat-raised-button color="primary" routerLink="/fiche-qualite">
+      <mat-icon>add</mat-icon>
+      Créer une Fiche Qualité
+    </button>
+  </div>
+
+</div> 
+<!-- 
+📝 MODALE GÉNÉRATION NOUVEAU RAPPORT -->
+<ng-template #nouveauRapportModal>
+  <div class="modal-container nouveau-rapport-modal">
+    <div class="modal-header">
+      <h2>
+        <mat-icon>add_chart</mat-icon>
+        Générer un Nouveau Rapport
+      </h2>
+      <button mat-icon-button (click)="fermerModaleNouveauRapport()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <form [formGroup]="nouveauRapportForm" class="rapport-form">
+        
+        <!-- Titre du rapport -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Titre du rapport</mat-label>
+          <input matInput formControlName="titre" placeholder="Ex: Rapport Mensuel Novembre 2024">
+          <mat-error *ngIf="nouveauRapportForm.get('titre')?.hasError('required')">
+            Le titre est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Type de rapport -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Type de rapport</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="MENSUEL">Rapport Mensuel</mat-option>
+            <mat-option value="TRIMESTRIEL">Rapport Trimestriel</mat-option>
+            <mat-option value="ANNUEL">Rapport Annuel</mat-option>
+            <mat-option value="PERSONNALISE">Rapport Personnalisé</mat-option>
+            <mat-option value="IA_PREDICTIF">Analyse IA Prédictive</mat-option>
+            <mat-option value="EXECUTIF">Dashboard Exécutif</mat-option>
+          </mat-select>
+          <mat-error *ngIf="nouveauRapportForm.get('type')?.hasError('required')">
+            Le type est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Période -->
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date de début</mat-label>
+            <input matInput [matDatepicker]="dateDebut" formControlName="dateDebut">
+            <mat-datepicker-toggle matSuffix [for]="dateDebut"></mat-datepicker-toggle>
+            <mat-datepicker #dateDebut></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="dateFin" formControlName="dateFin">
+            <mat-datepicker-toggle matSuffix [for]="dateFin"></mat-datepicker-toggle>
+            <mat-datepicker #dateFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Départements -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Départements à inclure</mat-label>
+          <mat-select formControlName="departements" multiple>
+            <mat-option value="PRODUCTION">Production</mat-option>
+            <mat-option value="QUALITE">Qualité</mat-option>
+            <mat-option value="LOGISTIQUE">Logistique</mat-option>
+            <mat-option value="RH">Ressources Humaines</mat-option>
+            <mat-option value="IT">Informatique</mat-option>
+            <mat-option value="TOUS">Tous les départements</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Sections à inclure -->
+        <div class="sections-selection">
+          <h4>Sections à inclure dans le rapport :</h4>
+          <div class="checkbox-grid">
+            <mat-checkbox formControlName="inclureKPI">Indicateurs KPI</mat-checkbox>
+            <mat-checkbox formControlName="inclureGraphiques">Graphiques & Charts</mat-checkbox>
+            <mat-checkbox formControlName="inclureTableaux">Tableaux de données</mat-checkbox>
+            <mat-checkbox formControlName="inclureAlertes">Alertes & Notifications</mat-checkbox>
+            <mat-checkbox formControlName="inclureRecommandations">Recommandations</mat-checkbox>
+            <mat-checkbox formControlName="inclureHistorique">Historique des tendances</mat-checkbox>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description (optionnelle)</mat-label>
+          <textarea matInput formControlName="description" rows="3" 
+                    placeholder="Description détaillée du rapport..."></textarea>
+        </mat-form-field>
+
+      </form>
+    </div>
+
+    <div class="modal-actions">
+      <button mat-button (click)="fermerModaleNouveauRapport()" class="cancel-btn">
+        <mat-icon>cancel</mat-icon>
+        Annuler
+      </button>
+      <button mat-raised-button color="primary" 
+              (click)="confirmerGenerationRapport()" 
+              [disabled]="nouveauRapportForm.invalid || generationEnCours"
+              class="generate-btn">
+        <mat-icon *ngIf="!generationEnCours">add_chart</mat-icon>
+        <mat-spinner *ngIf="generationEnCours" diameter="20"></mat-spinner>
+        {{ generationEnCours ? 'Génération...' : 'Générer le Rapport' }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- 👁️ MODALE PRÉVISUALISATION RAPPORT -->
+<ng-template #previewRapportModal>
+  <div class="modal-container preview-rapport-modal">
+    <div class="modal-header">
+      <h2>
+        <mat-icon>visibility</mat-icon>
+        Prévisualisation du Rapport
+      </h2>
+      <button mat-icon-button (click)="fermerModalePreview()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content" *ngIf="rapportSelectionne">
+      <div class="rapport-preview">
+        
+        <!-- En-tête du rapport -->
+        <div class="preview-header">
+          <div class="rapport-info">
+            <h3>{{ rapportSelectionne.titre }}</h3>
+            <div class="rapport-meta">
+              <span class="meta-item">
+                <mat-icon>category</mat-icon>
+                {{ rapportSelectionne.type }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                {{ rapportSelectionne.dateGeneration | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>folder</mat-icon>
+                {{ rapportSelectionne.taille }}
+              </span>
+            </div>
+          </div>
+          <mat-chip [color]="getStatutColor(rapportSelectionne.statut)" selected>
+            {{ rapportSelectionne.statut }}
+          </mat-chip>
+        </div>
+
+        <!-- Contenu du rapport -->
+        <div class="preview-content">
+          <div class="content-section">
+            <h4>📊 Résumé Exécutif</h4>
+            <p>Ce rapport présente une analyse complète des indicateurs qualité pour la période sélectionnée. 
+               Les données incluent les métriques de conformité, performance et gestion des risques.</p>
+          </div>
+
+          <div class="content-section">
+            <h4>🎯 Indicateurs Clés</h4>
+            <div class="kpi-preview">
+              <div class="kpi-item">
+                <span class="kpi-label">Taux de Conformité:</span>
+                <span class="kpi-value">{{ tauxConformiteGlobal }}%</span>
+              </div>
+              <div class="kpi-item">
+                <span class="kpi-label">Score Performance:</span>
+                <span class="kpi-value">{{ scorePerformanceGlobal }}%</span>
+              </div>
+              <div class="kpi-item">
+                <span class="kpi-label">Délai Moyen:</span>
+                <span class="kpi-value">{{ delaiMoyenTraitement }} jours</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h4>📈 Tendances</h4>
+            <p>Tendance générale: <strong>{{ indicateurTendance }}</strong></p>
+            <p>Niveau de risque: <strong class="risk-{{ niveauRisqueGlobal.toLowerCase() }}">{{ niveauRisqueGlobal }}</strong></p>
+          </div>
+
+          <div class="content-section">
+            <h4>🔔 Alertes Actives</h4>
+            <p>{{ alertesCritiques }} alertes critiques, {{ alertesImportantes }} alertes importantes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button mat-button (click)="fermerModalePreview()" class="cancel-btn">
+        <mat-icon>close</mat-icon>
+        Fermer
+      </button>
+      <button mat-raised-button color="accent" (click)="telechargerRapport(rapportSelectionne)" class="download-btn">
+        <mat-icon>download</mat-icon>
+        Télécharger
+      </button>
+      <button mat-raised-button color="primary" (click)="imprimerRapport()" class="print-btn">
+        <mat-icon>print</mat-icon>
+        Imprimer
+      </button>
+    </div>
+  </div>
+</ng-template>

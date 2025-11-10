@@ -1,0 +1,329 @@
+<!-- 🚀 DASHBOARD PILOTE QUALITÉ - FICHES QUALITÉ -->
+<div class="dashboard-container">
+
+  <!-- 📊 HEADER AVEC NAVIGATION -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="navigation-section">
+          <button mat-icon-button (click)="retourDashboard()" class="back-btn" matTooltip="Retour au Dashboard">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div class="breadcrumb">
+            <span class="breadcrumb-item" (click)="retourDashboard()">Dashboard Pilote</span>
+            <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+            <span class="breadcrumb-current">Fiches Qualité</span>
+          </div>
+        </div>
+        <h1>
+          <mat-icon class="header-icon">assignment</mat-icon>
+          Fiches Qualité - Vue Pilote
+        </h1>
+        <p class="subtitle">Consultation et suivi des fiches qualité du système</p>
+      </div>
+
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="exportPDF()" class="action-btn">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Export PDF
+        </button>
+        <button mat-raised-button color="accent" (click)="exportExcel()" class="action-btn">
+          <mat-icon>table_chart</mat-icon>
+          Export Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚡ LOADING STATE -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <h3>Chargement des fiches qualité...</h3>
+    <p>Récupération des données du système</p>
+  </div>
+
+  <!-- 📈 CONTENU PRINCIPAL -->
+  <div *ngIf="!loading" class="dashboard-content">
+
+    <!-- 📊 KPI ET MÉTRIQUES PRINCIPALES -->
+    <div class="kpi-section">
+      <h2 class="section-title">
+        <mat-icon>dashboard</mat-icon>
+        Indicateurs Clés de Performance
+      </h2>
+
+      <div class="kpi-grid">
+        <div class="kpi-card total" (click)="filtrerParStatut('ALL')">
+          <div class="kpi-icon">
+            <mat-icon>assignment</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ totalFiches }}</div>
+            <div class="kpi-label">Total Fiches</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              +{{ nouvelleFichesCeMois }}
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card en-cours" (click)="filtrerParStatut('EN_COURS')">
+          <div class="kpi-icon">
+            <mat-icon>hourglass_empty</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ fichesEnCours }}</div>
+            <div class="kpi-label">En Cours</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              {{ pourcentageEnCours }}%
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card terminees" (click)="filtrerParStatut('TERMINEE')">
+          <div class="kpi-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ fichesTerminees }}</div>
+            <div class="kpi-label">Terminées</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              {{ pourcentageTerminees }}%
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card validees" (click)="filtrerParStatut('VALIDEE')">
+          <div class="kpi-icon">
+            <mat-icon>verified</mat-icon>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value">{{ fichesValidees }}</div>
+            <div class="kpi-label">Validées</div>
+            <div class="kpi-trend positive">
+              <mat-icon>trending_up</mat-icon>
+              {{ pourcentageValidees }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎛️ FILTRES ET CONTRÔLES -->
+    <div class="filters-section">
+      <h2 class="section-title">
+        <mat-icon>tune</mat-icon>
+        Filtres & Recherche
+      </h2>
+
+      <mat-card class="filters-card">
+        <mat-card-content>
+          <div class="filters-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Rechercher</mat-label>
+              <input matInput [(ngModel)]="recherche" (ngModelChange)="appliquerFiltres()"
+                placeholder="Titre, description, responsable...">
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Statut</mat-label>
+              <mat-select [(ngModel)]="filtreStatut" (selectionChange)="appliquerFiltres()">
+                <mat-option value="">Tous</mat-option>
+                <mat-option value="EN_COURS">En cours</mat-option>
+                <mat-option value="TERMINEE">Terminée</mat-option>
+                <mat-option value="VALIDEE">Validée</mat-option>
+                <mat-option value="REJETEE">Rejetée</mat-option>
+                <mat-option value="EN_ATTENTE">En attente</mat-option>
+                <mat-option value="BLOQUEE">Bloquée</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Type</mat-label>
+              <mat-select [(ngModel)]="filtreType" (selectionChange)="appliquerFiltres()">
+                <mat-option value="">Tous</mat-option>
+                <mat-option value="AUDIT">Audit</mat-option>
+                <mat-option value="CONTROLE">Contrôle</mat-option>
+                <mat-option value="AMELIORATION">Amélioration</mat-option>
+                <mat-option value="FORMATION">Formation</mat-option>
+                <mat-option value="MAINTENANCE">Maintenance</mat-option>
+                <mat-option value="AUTRE">Autre</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="filter-actions">
+              <button mat-raised-button color="primary" (click)="appliquerFiltres()">
+                <mat-icon>filter_alt</mat-icon>
+                Appliquer
+              </button>
+              <button mat-stroked-button (click)="reinitialiserFiltres()">
+                <mat-icon>clear</mat-icon>
+                Réinitialiser
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- 📋 LISTE DES FICHES QUALITÉ -->
+    <div class="fiches-section">
+      <h2 class="section-title">
+        <mat-icon>list</mat-icon>
+        Fiches Qualité ({{ fichesFiltrees.length }})
+        <div class="view-toggle">
+          <button mat-icon-button [color]="affichageCartes ? 'primary' : ''" (click)="basculerAffichage()"
+            [matTooltip]="affichageCartes ? 'Passer au tableau' : 'Passer aux cartes'">
+            <mat-icon>{{ affichageCartes ? 'view_list' : 'view_module' }}</mat-icon>
+          </button>
+        </div>
+      </h2>
+
+      <!-- Vue Cartes -->
+      <div *ngIf="affichageCartes" class="cards-container">
+        <div *ngIf="fichesFiltrees.length === 0" class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <h3>Aucun résultat</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+          <button mat-stroked-button (click)="reinitialiserFiltres()">Effacer les filtres</button>
+        </div>
+
+        <div class="fiches-grid">
+          <mat-card *ngFor="let fiche of fichesFiltrees" class="fiche-card">
+            <mat-card-header>
+              <div mat-card-avatar class="fiche-avatar" [style.background-color]="getTypeColor(fiche.typeFiche)">
+                <mat-icon>{{ getTypeIcon(fiche.typeFiche) }}</mat-icon>
+              </div>
+              <mat-card-title>{{ fiche.titre }}</mat-card-title>
+              <mat-card-subtitle>{{ fiche.responsable }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="description">{{ fiche.description }}</p>
+              <div class="fiche-info">
+                <div class="info-item">
+                  <mat-icon>category</mat-icon>
+                  <span>{{ fiche.typeFiche }}</span>
+                </div>
+                <div class="info-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ fiche.dateEcheance | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-item">
+                  <mat-icon>flag</mat-icon>
+                  <span class="statut" [class]="getStatutClass(fiche.statut)">{{ fiche.statut }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="voirDetailFiche(fiche)" class="detail-btn">
+                <mat-icon>visibility</mat-icon>
+                Voir Détail
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Vue Tableau -->
+      <div *ngIf="!affichageCartes" class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="fiches-table">
+
+          <ng-container matColumnDef="titre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>title</mat-icon>
+              Titre
+            </th>
+            <td mat-cell *matCellDef="let fiche">
+              <div class="cell-content">
+                <mat-icon class="cell-icon">description</mat-icon>
+                <span class="cell-text">{{ fiche.titre }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="typeFiche">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>category</mat-icon>
+              Type
+            </th>
+            <td mat-cell *matCellDef="let fiche">
+              <span class="badge badge-type" [style.background-color]="getTypeColor(fiche.typeFiche)">
+                <mat-icon>{{ getTypeIcon(fiche.typeFiche) }}</mat-icon>
+                {{ fiche.typeFiche }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>flag</mat-icon>
+              Statut
+            </th>
+
+            <td mat-cell *matCellDef="let fiche">
+              <span class="badge badge-statut" [class]="getStatutClass(fiche.statut)">
+                <mat-icon>{{ getStatutIcon(fiche.statut) }}</mat-icon>
+                {{ fiche.statut }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="responsable">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>person</mat-icon>
+              Responsable
+            </th>
+            <td mat-cell *matCellDef="let fiche">
+              <div class="responsable-cell">
+                <mat-icon>account_circle</mat-icon>
+                <span>{{ fiche.responsable }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dateEcheance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>schedule</mat-icon>
+              Échéance
+            </th>
+            <td mat-cell *matCellDef="let fiche">{{ fiche.dateEcheance | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>visibility</mat-icon>
+              Actions
+            </th>
+            <td mat-cell *matCellDef="let fiche">
+              <button mat-raised-button color="primary" (click)="voirDetailFiche(fiche)" class="detail-btn-table">
+                <mat-icon>visibility</mat-icon>
+                <span>Détail</span>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" [pageSize]="10" showFirstLastButtons
+          aria-label="Sélectionner la page des fiches">
+        </mat-paginator>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🚫 ÉTAT VIDE -->
+  <div *ngIf="!loading && totalFiches === 0" class="empty-state">
+    <mat-icon>assignment_late</mat-icon>
+    <h3>Aucune fiche qualité</h3>
+    <p>Il n'y a actuellement aucune fiche qualité dans le système</p>
+  </div>
+
+</div>

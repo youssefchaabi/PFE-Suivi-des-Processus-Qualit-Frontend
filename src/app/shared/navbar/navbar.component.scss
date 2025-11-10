@@ -1,0 +1,257 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  min-height: 64px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+// Logo
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .logo-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: white;
+  }
+
+  .app-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+// Recherche
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+
+  .search-toggle {
+    color: white;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .search-input-wrapper {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  ::ng-deep .search-field {
+    width: 300px;
+    margin: 0;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+
+    .mat-form-field-outline {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .mat-form-field-outline-thick {
+      color: white;
+    }
+
+    input {
+      color: white;
+    }
+
+    .mat-form-field-label {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    mat-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+// Actions
+.action-btn {
+  color: white;
+  margin: 0 0.25rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+// Menu utilisateur
+.user-menu-btn {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .user-icon {
+    font-size: 1.75rem;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .user-name {
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dropdown-icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// Menu dropdown
+::ng-deep .user-menu {
+  .mat-menu-content {
+    padding: 0;
+  }
+
+  .user-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .header-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      padding: 0.5rem;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name-text {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .user-role {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+  }
+
+  button[mat-menu-item] {
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      color: #667eea;
+    }
+
+    &:hover {
+      background: rgba(102, 126, 234, 0.08);
+    }
+
+    &.logout-btn {
+      mat-icon {
+        color: #e74c3c;
+      }
+
+      &:hover {
+        background: rgba(231, 76, 60, 0.08);
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .logo-section {
+    .app-title {
+      display: none;
+    }
+  }
+
+  .search-container {
+    ::ng-deep .search-field {
+      width: 200px;
+    }
+  }
+
+  .user-menu-btn {
+    .user-name {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    &:not(.notif-btn) {
+      display: none;
+    }
+  }
+
+  .search-container {
+    ::ng-deep .search-field {
+      width: 150px;
+    }
+  }
+}
+
+

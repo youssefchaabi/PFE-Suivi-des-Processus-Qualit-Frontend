@@ -1,0 +1,169 @@
+<!-- 🔔 NOTIFICATIONS - DESIGN MODERNE ET RESPONSIVE -->
+<div class="notifications-container">
+  
+  <!-- 📊 HEADER -->
+  <div class="notifications-header">
+    <div class="header-content">
+      <div class="title-with-back">
+        <button mat-icon-button (click)="retourDashboard()" class="back-btn" matTooltip="Retour au Dashboard">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="title-section">
+          <h1 class="page-title">
+            <mat-icon class="title-icon">notifications_active</mat-icon>
+            Notifications
+          </h1>
+          <p class="subtitle">Centre de notifications et alertes qualité</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Statistiques rapides -->
+    <div class="stats-cards">
+      <div class="stat-card total">
+        <mat-icon>notifications</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ data.length }}</span>
+          <span class="stat-label">Total</span>
+        </div>
+      </div>
+      <div class="stat-card unread">
+        <mat-icon>mark_email_unread</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ getUnreadCount() }}</span>
+          <span class="stat-label">Non lues</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎛️ FILTRES -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-grid">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Type de notification</mat-label>
+          <mat-select [(ngModel)]="filterType" (selectionChange)="reload()">
+            <mat-option value="">
+              <mat-icon>all_inclusive</mat-icon>
+              Tous les types
+            </mat-option>
+            <mat-option value="FICHE_QUALITE">
+              <mat-icon>assignment</mat-icon>
+              Fiche Qualité
+            </mat-option>
+            <mat-option value="FICHE_SUIVI">
+              <mat-icon>assignment_turned_in</mat-icon>
+              Fiche Suivi
+            </mat-option>
+            <mat-option value="RETARD">
+              <mat-icon>schedule</mat-icon>
+              Retard
+            </mat-option>
+            <mat-option value="ALERTE">
+              <mat-icon>warning</mat-icon>
+              Alerte
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>filter_list</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>État</mat-label>
+          <mat-select [(ngModel)]="filterEtat" (selectionChange)="reload()">
+            <mat-option value="">Tous</mat-option>
+            <mat-option value="NLU">
+              <mat-icon>mark_email_unread</mat-icon>
+              Non lue
+            </mat-option>
+            <mat-option value="LU">
+              <mat-icon>drafts</mat-icon>
+              Lue
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>flag</mat-icon>
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" (click)="markAllAsRead()" class="action-btn">
+          <mat-icon>done_all</mat-icon>
+          Tout marquer comme lu
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 📋 LISTE DES NOTIFICATIONS -->
+  <div class="notifications-list">
+    
+    <!-- État vide -->
+    <div *ngIf="data.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">notifications_off</mat-icon>
+      <h3>Aucune notification</h3>
+      <p>Vous n'avez aucune notification pour le moment</p>
+    </div>
+
+    <!-- Cartes de notifications -->
+    <div class="notifications-grid" *ngIf="data.length > 0">
+      <mat-card 
+        *ngFor="let notif of data" 
+        class="notification-card"
+        [class.unread]="!notif.lu"
+        [@slideIn]>
+        
+        <!-- Indicateur non lu -->
+        <div class="unread-indicator" *ngIf="!notif.lu"></div>
+        
+        <mat-card-header>
+          <div mat-card-avatar class="notification-avatar" [class]="getTypeClass(notif.type)">
+            <mat-icon>{{ getTypeIcon(notif.type) }}</mat-icon>
+          </div>
+          <mat-card-title>{{ getTypeLabel(notif.type) }}</mat-card-title>
+          <mat-card-subtitle>
+            <mat-icon class="time-icon">schedule</mat-icon>
+            {{ notif.dateCreation | date:'dd/MM/yyyy HH:mm' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="notification-message">{{ notif.message }}</p>
+          
+          <div class="notification-meta">
+            <mat-chip [class]="notif.lu ? 'chip-read' : 'chip-unread'">
+              <mat-icon>{{ notif.lu ? 'drafts' : 'mark_email_unread' }}</mat-icon>
+              {{ notif.lu ? 'Lue' : 'Non lue' }}
+            </mat-chip>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="notification-actions">
+          <button 
+            mat-icon-button 
+            (click)="markAsRead(notif)" 
+            [disabled]="notif.lu" 
+            matTooltip="Marquer comme lue"
+            class="action-btn-icon">
+            <mat-icon>done</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            (click)="relancer(notif)" 
+            [disabled]="notif.lu" 
+            matTooltip="Relancer par e-mail"
+            class="action-btn-icon">
+            <mat-icon>send</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="delete(notif)" 
+            matTooltip="Supprimer"
+            class="action-btn-icon delete-btn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+
