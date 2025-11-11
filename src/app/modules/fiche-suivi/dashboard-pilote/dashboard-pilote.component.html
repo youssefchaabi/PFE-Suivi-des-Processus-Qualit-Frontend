@@ -22,128 +22,160 @@
 
     <!-- Section: KPI -->
     <section id="kpi" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>speed</mat-icon>
-        Indicateurs KPI
-      </h2>
-      <div class="kpi-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">bar_chart</mat-icon>
+      <div class="modern-card card-blue">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>bar_chart</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>bar_chart</mat-icon>
             <h3>Tableau KPI</h3>
-            <p>Consultez vos indicateurs de performance</p>
-            <a mat-raised-button color="primary" routerLink="/kpi">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </a>
-          </mat-card-content>
-        </mat-card>
+          </div>
+          <p class="card-description">Consultez vos indicateurs de performance</p>
+          <ul class="card-features">
+            <li>• Métriques en temps réel</li>
+            <li>• Graphiques et statistiques</li>
+          </ul>
+          <a mat-raised-button class="access-btn" routerLink="/kpi">
+            <mat-icon>visibility</mat-icon>
+            Consulter les KPI
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- Section: Fiches de Suivi -->
     <section id="tracking" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>assignment_turned_in</mat-icon>
-        Fiches de Suivi
-      </h2>
-      <div class="tracking-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">track_changes</mat-icon>
+      <div class="modern-card card-green">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>track_changes</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>track_changes</mat-icon>
             <h3>Fiches de Suivi</h3>
-            <p>Suivez l'avancement des fiches</p>
-            <a mat-raised-button color="primary" routerLink="/fiche-suivi/liste">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </a>
-          </mat-card-content>
-        </mat-card>
+          </div>
+          <p class="card-description">Suivez l'évolution et l'avancement des fiches</p>
+          <ul class="card-features">
+            <li>• Suivi en temps réel</li>
+            <li>• Historique complet</li>
+          </ul>
+          <a mat-raised-button class="access-btn" routerLink="/fiche-suivi/liste">
+            <mat-icon>visibility</mat-icon>
+            Consulter les Fiches de Suivi
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- Section: Fiches Qualité -->
     <section id="quality" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>verified</mat-icon>
-        Fiches Qualité
-      </h2>
-      <div class="quality-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">assignment</mat-icon>
+      <div class="modern-card card-purple">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>assignment</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>assignment</mat-icon>
             <h3>Fiches Qualité</h3>
-            <p>Consultez et suivez les fiches qualité du système</p>
-            <button mat-raised-button color="primary" (click)="ouvrirFichesQualite()">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </button>
-          </mat-card-content>
-        </mat-card>
+          </div>
+          <p class="card-description">Consultez toutes les fiches qualité du système</p>
+          <ul class="card-features">
+            <li>• Vue en lecture seule</li>
+            <li>• KPI en temps réel</li>
+          </ul>
+          <button mat-raised-button class="access-btn" (click)="ouvrirFichesQualite()">
+            <mat-icon>visibility</mat-icon>
+            Consulter les Fiches Qualité
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- Section: Alertes -->
     <section id="alerts" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>warning</mat-icon>
-        Alertes et Notifications
-      </h2>
-      <div class="alerts-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">notifications</mat-icon>
+      <div class="modern-card card-orange">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>notifications</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>notifications</mat-icon>
             <h3>Notifications</h3>
-            <p>Gérez vos notifications qualité</p>
-            <a mat-raised-button color="accent" routerLink="/notifications">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </a>
-          </mat-card-content>
-        </mat-card>
+          </div>
+          <p class="card-description">Gérez vos notifications et alertes qualité</p>
+          <ul class="card-features">
+            <li>• Notifications en temps réel</li>
+            <li>• Alertes automatiques</li>
+          </ul>
+          <a mat-raised-button class="access-btn" routerLink="/notifications">
+            <mat-icon>visibility</mat-icon>
+            Consulter les Notifications
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- Section: Analyses IA -->
     <section id="analytics" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>psychology</mat-icon>
-        Analyses IA
-      </h2>
-      <div class="analytics-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">auto_awesome</mat-icon>
-            <h3>Dashboard IA</h3>
-            <p>Analyses prédictives et insights</p>
-            <a mat-raised-button color="warn" routerLink="/ai-dashboard">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </a>
-          </mat-card-content>
-        </mat-card>
+      <div class="modern-card card-teal">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>psychology</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>psychology</mat-icon>
+            <h3>Analyses IA</h3>
+          </div>
+          <p class="card-description">Analyses prédictives et insights intelligents</p>
+          <ul class="card-features">
+            <li>• Prédictions avancées</li>
+            <li>• Recommandations IA</li>
+          </ul>
+          <a mat-raised-button class="access-btn" routerLink="/ai-dashboard">
+            <mat-icon>visibility</mat-icon>
+            Consulter les Analyses IA
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- Section: Rapports -->
     <section id="reports" class="dashboard-section">
-      <h2 class="section-title">
-        <mat-icon>description</mat-icon>
-        Rapports
-      </h2>
-      <div class="reports-grid">
-        <mat-card class="action-card">
-          <mat-card-content>
-            <mat-icon class="card-icon">assessment</mat-icon>
+      <div class="modern-card card-indigo">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <mat-icon>assessment</mat-icon>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-icon-title">
+            <mat-icon>assessment</mat-icon>
             <h3>Rapports Qualité</h3>
-            <p>Générez et consultez vos rapports</p>
-            <a mat-raised-button color="primary" routerLink="/rapports">
-              <mat-icon>arrow_forward</mat-icon>
-              Accéder
-            </a>
-          </mat-card-content>
-        </mat-card>
+          </div>
+          <p class="card-description">Générez et consultez vos rapports</p>
+          <ul class="card-features">
+            <li>• Rapports détaillés</li>
+            <li>• Export PDF/Excel</li>
+          </ul>
+          <a mat-raised-button class="access-btn" routerLink="/rapports">
+            <mat-icon>visibility</mat-icon>
+            Consulter les Rapports
+          </a>
+        </div>
       </div>
     </section>
+
+
   </div>
 </div>

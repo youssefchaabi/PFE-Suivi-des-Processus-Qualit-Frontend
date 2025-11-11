@@ -81,45 +81,401 @@
   gap: 1.5rem;
 }
 
-.action-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-
+// ==================== MODERN CARD DESIGN ====================
+.modern-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+  animation: fadeInUp 0.6s ease-out backwards;
+  
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-8px) scale(1.02);
+    
+    .card-header .icon-wrapper {
+      transform: rotate(5deg) scale(1.05);
+    }
   }
-
-  mat-card-content {
-    text-align: center;
-    padding: 2rem !important;
-  }
-
-  .card-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    color: #f57c00;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0 0 0.5rem 0;
-  }
-
-  p {
-    color: #666;
-    margin: 0 0 1.5rem 0;
-  }
-
-  a {
-    display: inline-flex;
+  
+  .card-header {
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
+    padding: 1.5rem 1.5rem 0.75rem 1.5rem;
+    
+    .icon-wrapper {
+      width: 64px;
+      height: 64px;
+      background: white;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      mat-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 0.75rem 1.5rem 1.5rem 1.5rem;
+    
+    .card-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      
+      mat-icon {
+        font-size: 1.75rem;
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+      
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+    }
+    
+    .card-description {
+      font-size: 1rem;
+      color: #424242;
+      margin: 0 0 1rem 0;
+      line-height: 1.5;
+    }
+    
+    .card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem 0;
+      
+      li {
+        font-size: 0.9375rem;
+        color: #616161;
+        margin-bottom: 0.5rem;
+        padding-left: 0.25rem;
+        line-height: 1.4;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .access-btn {
+      width: 100%;
+      height: 48px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 12px;
+      text-transform: none;
+      letter-spacing: 0.3px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      mat-icon {
+        margin-right: 0.5rem;
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+      
+      &:hover {
+        transform: translateY(-2px) scale(0.98);
+      }
+      
+      &:active {
+        transform: translateY(0) scale(0.96);
+      }
+    }
+  }
+}
+
+// ==================== COLOR VARIANTS ====================
+// Blue - KPI
+.card-blue {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 3px solid #2196f3;
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(33, 150, 243, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(33, 150, 243, 0.25);
+    mat-icon { color: #2196f3; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #2196f3; }
+      h3 { color: #1565c0; }
+    }
+    
+    .access-btn {
+      background: #2196f3;
+      box-shadow: 0 4px 16px rgba(33, 150, 243, 0.4);
+      
+      &:hover {
+        background: #1976d2;
+        box-shadow: 0 8px 24px rgba(33, 150, 243, 0.6);
+      }
+    }
+  }
+}
+
+// Green - Fiches de Suivi
+.card-green {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 3px solid #4caf50;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(76, 175, 80, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.25);
+    mat-icon { color: #4caf50; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #4caf50; }
+      h3 { color: #388e3c; }
+    }
+    
+    .access-btn {
+      background: #4caf50;
+      box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+      
+      &:hover {
+        background: #388e3c;
+        box-shadow: 0 8px 24px rgba(76, 175, 80, 0.6);
+      }
+    }
+  }
+}
+
+// Purple - Fiches Qualité
+.card-purple {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  border: 3px solid #9c27b0;
+  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(156, 39, 176, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(156, 39, 176, 0.25);
+    mat-icon { color: #9c27b0; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #9c27b0; }
+      h3 { color: #7b1fa2; }
+    }
+    
+    .access-btn {
+      background: #9c27b0;
+      box-shadow: 0 4px 16px rgba(156, 39, 176, 0.4);
+      
+      &:hover {
+        background: #7b1fa2;
+        box-shadow: 0 8px 24px rgba(156, 39, 176, 0.6);
+      }
+    }
+  }
+}
+
+// Orange - Notifications
+.card-orange {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 3px solid #ff9800;
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(255, 152, 0, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.25);
+    mat-icon { color: #ff9800; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #ff9800; }
+      h3 { color: #f57c00; }
+    }
+    
+    .access-btn {
+      background: #ff9800;
+      box-shadow: 0 4px 16px rgba(255, 152, 0, 0.4);
+      
+      &:hover {
+        background: #f57c00;
+        box-shadow: 0 8px 24px rgba(255, 152, 0, 0.6);
+      }
+    }
+  }
+}
+
+// Teal - Analyses IA
+.card-teal {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  border: 3px solid #00bcd4;
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(0, 188, 212, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(0, 188, 212, 0.25);
+    mat-icon { color: #00bcd4; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #00bcd4; }
+      h3 { color: #0097a7; }
+    }
+    
+    .access-btn {
+      background: #00bcd4;
+      box-shadow: 0 4px 16px rgba(0, 188, 212, 0.4);
+      
+      &:hover {
+        background: #0097a7;
+        box-shadow: 0 8px 24px rgba(0, 188, 212, 0.6);
+      }
+    }
+  }
+}
+
+// Indigo - Rapports
+.card-indigo {
+  background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+  border: 3px solid #3f51b5;
+  box-shadow: 0 6px 20px rgba(63, 81, 181, 0.2);
+  
+  &:hover {
+    box-shadow: 0 12px 32px rgba(63, 81, 181, 0.35);
+  }
+  
+  .card-header .icon-wrapper {
+    box-shadow: 0 6px 16px rgba(63, 81, 181, 0.25);
+    mat-icon { color: #3f51b5; }
+  }
+  
+  .card-body {
+    .card-icon-title {
+      mat-icon { color: #3f51b5; }
+      h3 { color: #303f9f; }
+    }
+    
+    .access-btn {
+      background: #3f51b5;
+      box-shadow: 0 4px 16px rgba(63, 81, 181, 0.4);
+      
+      &:hover {
+        background: #303f9f;
+        box-shadow: 0 8px 24px rgba(63, 81, 181, 0.6);
+      }
+    }
+  }
+}
+
+// ==================== ANIMATIONS ====================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Staggered animation delays
+#kpi .modern-card { animation-delay: 0.1s; }
+#tracking .modern-card { animation-delay: 0.2s; }
+#quality .modern-card { animation-delay: 0.3s; }
+#alerts .modern-card { animation-delay: 0.4s; }
+#analytics .modern-card { animation-delay: 0.5s; }
+#reports .modern-card { animation-delay: 0.6s; }
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .modern-card {
+    animation: none;
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .modern-card {
+    .card-header {
+      padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+      
+      .icon-wrapper {
+        width: 56px;
+        height: 56px;
+        
+        mat-icon {
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+    
+    .card-body {
+      padding: 0.5rem 1.25rem 1.25rem 1.25rem;
+      
+      .card-icon-title {
+        h3 {
+          font-size: 1.25rem;
+        }
+        
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+      
+      .card-description {
+        font-size: 0.9375rem;
+      }
+      
+      .card-features li {
+        font-size: 0.875rem;
+      }
+      
+      .access-btn {
+        height: 44px;
+        font-size: 0.9375rem;
+      }
+    }
   }
 }
 
