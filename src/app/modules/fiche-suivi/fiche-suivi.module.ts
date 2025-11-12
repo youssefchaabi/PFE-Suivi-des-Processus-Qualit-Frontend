@@ -27,6 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ChatAssistantModule } from 'src/app/components/chat-assistant/chat-assistant.module';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatChipsModule,
     MatPaginatorModule,
     MatDialogModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ChatAssistantModule
   ]
 })
 export class FicheSuiviModule { }

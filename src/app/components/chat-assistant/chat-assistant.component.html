@@ -1,0 +1,88 @@
+<div class="chat-container">
+  <!-- Floating Action Button -->
+  <button 
+    *ngIf="!isOpen" 
+    class="chat-fab" 
+    mat-fab 
+    (click)="toggleChat()"
+    [class.has-unread]="unreadCount > 0">
+    <mat-icon>smart_toy</mat-icon>
+    <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }}</span>
+  </button>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel" [class.open]="isOpen">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="assistant-info">
+          <mat-icon class="assistant-icon">smart_toy</mat-icon>
+          <div class="assistant-details">
+            <h3>Assistant Qualité</h3>
+            <span class="status">
+              <span class="status-dot"></span>
+              En ligne
+            </span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button mat-icon-button (click)="closeChat()" class="close-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="messages-container" #messagesContainer>
+      <div *ngFor="let message of messages" 
+           [ngClass]="getMessageClass(message)"
+           class="message-wrapper">
+        <div class="message-content">
+          <div class="message-bubble" [innerHTML]="formatMessage(message.text)"></div>
+          <span class="message-time">{{ message.timestamp | date:'HH:mm' }}</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions (shown after welcome message) -->
+      <div *ngIf="messages.length === 1" class="quick-actions">
+        <p class="quick-actions-title">Actions rapides:</p>
+        <div class="quick-actions-grid">
+          <button 
+            *ngFor="let action of quickActions" 
+            mat-stroked-button 
+            class="quick-action-btn"
+            (click)="sendQuickAction(action.query)">
+            <mat-icon>{{ action.icon }}</mat-icon>
+            <span>{{ action.text }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea
+          [(ngModel)]="userInput"
+          (keypress)="onKeyPress($event)"
+          placeholder="Posez votre question..."
+          class="message-input"
+          rows="1"
+          [disabled]="isLoading"
+          maxlength="500"></textarea>
+        <button 
+          mat-icon-button 
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!userInput.trim() || isLoading">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+      <div class="input-footer">
+        <span class="char-count">{{ userInput.length }}/500</span>
+        <span class="powered-by">Propulsé par Gemini Flash 2.0</span>
+      </div>
+    </div>
+  </div>
+</div>
