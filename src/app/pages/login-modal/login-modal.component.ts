@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/authentification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ForgotPasswordModalComponent } from '../forgot-password-modal/forgot-password-modal.component';
 
 @Component({
   selector: 'app-login-modal',
@@ -46,7 +47,8 @@ export class LoginModalComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -138,5 +140,16 @@ export class LoginModalComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  onForgotPassword(): void {
+    // Ouvrir le modal de mot de passe oublié
+    this.dialog.open(ForgotPasswordModalComponent, {
+      width: '550px',
+      maxWidth: '95vw',
+      panelClass: 'forgot-password-dialog',
+      disableClose: false,
+      autoFocus: true
+    });
   }
 }

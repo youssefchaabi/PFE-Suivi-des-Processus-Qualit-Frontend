@@ -5,10 +5,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './modules/auth/unauthorized/unauthorized.component';
 import { KpiComponent } from './kpi/kpi.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { ResetPasswordHandlerComponent } from './pages/reset-password-handler/reset-password-handler.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'home', component: LandingComponent },
+  { path: 'reset-password', component: ResetPasswordHandlerComponent },
   { path: 'utilisateurs', loadChildren: () => import('./modules/utilisateur/utilisateur.module').then(m => m.UtilisateurModule) },
   { path: 'nomenclatures', canActivate: [AuthGuard], loadChildren: () => import('./modules/nomenclature/nomenclature.module').then(m => m.NomenclatureModule), data: { role: 'ADMIN' } },
   { path: 'utilisateurs/nouveau',component: FormulaireComponent},

@@ -7,14 +7,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './login/login.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
 
   imports: [
@@ -26,6 +32,8 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class AuthModule { }

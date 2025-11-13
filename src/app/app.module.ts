@@ -37,6 +37,9 @@ import { KpiComponent } from './kpi/kpi.component';
 import { Chart, registerables } from 'chart.js';
 import { LandingComponent } from './pages/landing/landing.component';
 import { LoginModalComponent } from './pages/login-modal/login-modal.component';
+import { ForgotPasswordModalComponent } from './pages/forgot-password-modal/forgot-password-modal.component';
+import { ResetPasswordModalComponent } from './pages/reset-password-modal/reset-password-modal.component';
+import { ResetPasswordHandlerComponent } from './pages/reset-password-handler/reset-password-handler.component';
 import { SharedModule } from './shared/shared.module';
 Chart.register(...registerables);
 
@@ -47,7 +50,10 @@ Chart.register(...registerables);
     NavbarComponent,
     KpiComponent,
     LandingComponent,
-    LoginModalComponent
+    LoginModalComponent,
+    ForgotPasswordModalComponent,
+    ResetPasswordModalComponent,
+    ResetPasswordHandlerComponent
   ],
   imports: [
     BrowserModule,

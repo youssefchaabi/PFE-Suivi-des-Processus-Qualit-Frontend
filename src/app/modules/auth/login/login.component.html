@@ -18,6 +18,12 @@
         <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid">
           {{ loading ? 'Connexion...' : 'Se connecter' }}
         </button>
+        
+        <div class="forgot-password-link">
+          <a mat-button routerLink="/auth/forgot-password">
+            Mot de passe oublié ?
+          </a>
+        </div>
       </form>
     </mat-card-content>
   </mat-card>

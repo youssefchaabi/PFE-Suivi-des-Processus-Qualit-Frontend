@@ -730,3 +730,58 @@ app-projet-details-dialog {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
   }
 }
+
+
+/* ==================== Forgot Password Modal Styles ==================== */
+.forgot-password-dialog {
+  .mat-dialog-container {
+    padding: 0 !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+/* ==================== Reset Password Modal Styles ==================== */
+.reset-password-dialog {
+  .mat-dialog-container {
+    padding: 0 !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+/* ==================== Snackbar Styles ==================== */
+.success-snackbar {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4) !important;
+  
+  .mat-simple-snackbar-action {
+    color: white !important;
+    font-weight: 600;
+  }
+}
+
+.error-snackbar {
+  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4) !important;
+  
+  .mat-simple-snackbar-action {
+    color: white !important;
+    font-weight: 600;
+  }
+}
+
+.info-snackbar {
+  background: linear-gradient(135deg, #2196f3 0%, #42a5f5 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4) !important;
+  
+  .mat-simple-snackbar-action {
+    color: white !important;
+    font-weight: 600;
+  }
+}
