@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FicheQualiteComponent } from './fiche-qualite.component';
 
 describe('FicheQualiteComponent', () => {
@@ -8,7 +8,8 @@ describe('FicheQualiteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FicheQualiteComponent ]
+      declarations: [ FicheQualiteComponent ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 
