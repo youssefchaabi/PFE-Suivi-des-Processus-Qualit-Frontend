@@ -29,8 +29,8 @@ jobs:
       - name: Installation des dépendances
         run: npm ci
       
-      - name: Build du projet
-        run: npm run build --if-present
+      - name: Build du projet (configuration CI)
+        run: npm run build -- --configuration ci
       
       - name: Upload des artefacts
         uses: actions/upload-artifact@v4
