@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UtilisateurService, Utilisateur } from 'src/app/services/utilisateur.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { AuthService } from 'src/app/services/authentification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from 'src/app/shared/success-snackbar/success-snackbar.component';
 
@@ -22,10 +24,11 @@ export class FormulaireComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private utilisateurService: UtilisateurService,
+    private notificationService: NotificationService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
-
   ) {
     this.form = this.fb.group({
       nom: ['', Validators.required],
@@ -90,12 +93,49 @@ export class FormulaireComponent implements OnInit {
       this.router.navigate(['/utilisateurs']);
     });
   } else {
-    this.utilisateurService.createUtilisateur(utilisateur).subscribe(() => {
+    this.utilisateurService.createUtilisateur(utilisateur).subscribe((nouvelUtilisateur) => {
+      // Afficher le snackbar de succès
       this.snackBar.openFromComponent(SuccessSnackbarComponent, {
         data: { message: '✅ Utilisateur ajouté avec succès' },
         duration: 3000,
         panelClass: ['mat-snack-bar-success']
       });
+      
+      // Créer une notification pour l'administrateur connecté
+      const currentUserId = this.authService.getUserId();
+      if (currentUserId) {
+        this.notificationService.notifierCreationUtilisateur(
+          currentUserId,
+          utilisateur.nom
+        ).subscribe({
+          next: () => {
+            console.log('✅ Notification créée avec succès');
+          },
+          error: (err) => {
+            console.error('❌ Erreur lors de la création de la notification:', err);
+          }
+        });
+      }
+      
+      // Créer également une notification pour le nouvel utilisateur
+      if (nouvelUtilisateur && nouvelUtilisateur.id) {
+        const notificationNouvelUtilisateur = {
+          message: `Bienvenue ${utilisateur.nom} ! Votre compte a été créé avec succès.`,
+          type: 'BIENVENUE',
+          utilisateurId: nouvelUtilisateur.id,
+          lu: false
+        };
+        
+        this.notificationService.create(notificationNouvelUtilisateur).subscribe({
+          next: () => {
+            console.log('✅ Notification de bienvenue créée');
+          },
+          error: (err) => {
+            console.error('❌ Erreur notification bienvenue:', err);
+          }
+        });
+      }
+      
       this.router.navigate(['/utilisateurs']);
     });
     }

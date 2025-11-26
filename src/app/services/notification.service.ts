@@ -47,6 +47,26 @@ export class NotificationService {
       message: item.message
     }, { responseType: 'text' as 'json' });
   }
+
+  /**
+   * Créer une nouvelle notification
+   */
+  create(notification: NotificationItem): Observable<NotificationItem> {
+    return this.http.post<NotificationItem>(this.apiUrl, notification);
+  }
+
+  /**
+   * Créer une notification pour la création d'utilisateur
+   */
+  notifierCreationUtilisateur(utilisateurId: string, nomUtilisateur: string): Observable<NotificationItem> {
+    const notification: NotificationItem = {
+      message: `Nouvel utilisateur créé : ${nomUtilisateur}`,
+      type: 'CREATION_UTILISATEUR',
+      utilisateurId: utilisateurId,
+      lu: false
+    };
+    return this.create(notification);
+  }
 }
 
 
