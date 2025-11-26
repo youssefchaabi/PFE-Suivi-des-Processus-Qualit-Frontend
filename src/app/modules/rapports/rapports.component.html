@@ -373,7 +373,7 @@
 
       <mat-card class="reports-table-card">
         <mat-card-content>
-          <table mat-table [dataSource]="rapportsGeneres" class="reports-table" matSort>
+          <table mat-table [dataSource]="dataSource" class="reports-table" matSort>
             
             <ng-container matColumnDef="titre">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
@@ -457,11 +457,11 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-                class="rapport-row" 
-                (click)="selectionnerRapport(row)"></tr>
+                class="rapport-row"></tr>
           </table>
 
-          <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" 
+          <mat-paginator [pageSizeOptions]="[3, 5, 10, 20]" 
+                         [pageSize]="3"
                          showFirstLastButtons
                          aria-label="Sélectionner la page des rapports">
           </mat-paginator>
@@ -583,6 +583,14 @@
             <mat-datepicker-toggle matSuffix [for]="dateFin"></mat-datepicker-toggle>
             <mat-datepicker #dateFin></mat-datepicker>
           </mat-form-field>
+        </div>
+        
+        <!-- Message d'erreur pour les dates -->
+        <div class="date-error-message" *ngIf="nouveauRapportForm.hasError('dateInvalide') && (nouveauRapportForm.get('dateDebut')?.touched || nouveauRapportForm.get('dateFin')?.touched)">
+          <mat-error>
+            <mat-icon>error</mat-icon>
+            La date de fin doit être supérieure à la date de début
+          </mat-error>
         </div>
 
         <!-- Départements -->

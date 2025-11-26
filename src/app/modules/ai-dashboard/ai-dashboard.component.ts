@@ -624,19 +624,19 @@ export class AiDashboardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Retour au dashboard pilote qualité (KPI)
+   * Retour au dashboard pilote qualité
    */
   retourDashboard(): void {
     try {
-      // Naviguer vers le dashboard pilote qualité (KPI)
-      this.router.navigate(['/kpi']).catch(() => {
+      // Naviguer vers le dashboard pilote qualité (avec sidebar)
+      this.router.navigate(['/fiche-suivi/dashboard']).catch(() => {
         // En cas d'échec, forcer la navigation
-        window.location.href = '/kpi';
+        window.location.href = '/fiche-suivi/dashboard';
       });
     } catch (error) {
       console.error('Erreur de navigation:', error);
-      // Fallback direct vers KPI
-      window.location.href = '/kpi';
+      // Fallback direct vers le dashboard pilote
+      window.location.href = '/fiche-suivi/dashboard';
     }
   }
 

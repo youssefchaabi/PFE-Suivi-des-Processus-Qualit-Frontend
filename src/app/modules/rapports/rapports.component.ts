@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ExportService } from 'src/app/services/export.service';
 import { FicheQualiteService } from 'src/app/services/fiche-qualite.service';
@@ -31,6 +33,9 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Références aux modales
   @ViewChild('nouveauRapportModal') nouveauRapportModal!: TemplateRef<any>;
   @ViewChild('previewRapportModal') previewRapportModal!: TemplateRef<any>;
+  
+  // Référence au paginator
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   // Données
   fichesQualite: FicheQualite[] = [];
@@ -79,6 +84,7 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Nouvelles propriétés pour les fonctionnalités avancées
   rapportsGeneres: any[] = [];
+  dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = ['titre', 'type', 'dateGeneration', 'statut', 'taille', 'actions'];
   alertes: any[] = [];
   alertesCritiques = 0;
@@ -129,13 +135,52 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
       inclureRecommandations: [false],
       inclureHistorique: [false],
       description: ['']
+    }, { validators: this.dateRangeValidator });
+    
+    // Écouter les changements de dates pour revalider
+    this.nouveauRapportForm.get('dateDebut')?.valueChanges.subscribe(() => {
+      this.nouveauRapportForm.get('dateFin')?.updateValueAndValidity({ emitEvent: false });
     });
+    
+    this.nouveauRapportForm.get('dateFin')?.valueChanges.subscribe(() => {
+      this.nouveauRapportForm.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+  
+  /**
+   * 🔍 VALIDATEUR PERSONNALISÉ POUR LES DATES
+   */
+  dateRangeValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
+    const dateDebut = formGroup.get('dateDebut')?.value;
+    const dateFin = formGroup.get('dateFin')?.value;
+    
+    if (!dateDebut || !dateFin) {
+      return null;
+    }
+    
+    const debut = new Date(dateDebut);
+    const fin = new Date(dateFin);
+    
+    // Réinitialiser les heures pour comparer uniquement les dates
+    debut.setHours(0, 0, 0, 0);
+    fin.setHours(0, 0, 0, 0);
+    
+    if (fin <= debut) {
+      return { dateInvalide: true };
+    }
+    
+    return null;
   }
 
   ngAfterViewInit(): void {
     // Attendre que les éléments canvas soient disponibles
     setTimeout(() => {
       this.creerTousLesGraphiques();
+      
+      // Connecter le paginator au dataSource
+      if (this.paginator && this.dataSource) {
+        this.dataSource.paginator = this.paginator;
+      }
     }, 1000);
   }
 
@@ -353,8 +398,47 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
         statut: 'GÉNÉRÉ',
         taille: '4.1 MB',
         auteur: 'IA Engine'
+      },
+      {
+        id: 4,
+        titre: 'Rapport Annuel 2024',
+        type: 'ANNUEL',
+        dateGeneration: new Date(Date.now() - 259200000),
+        statut: 'GÉNÉRÉ',
+        taille: '5.2 MB',
+        auteur: 'Système'
+      },
+      {
+        id: 5,
+        titre: 'Analyse Conformité Octobre',
+        type: 'MENSUEL',
+        dateGeneration: new Date(Date.now() - 345600000),
+        statut: 'GÉNÉRÉ',
+        taille: '2.1 MB',
+        auteur: 'Pilote Qualité'
+      },
+      {
+        id: 6,
+        titre: 'Dashboard Exécutif Q3',
+        type: 'EXECUTIF',
+        dateGeneration: new Date(Date.now() - 432000000),
+        statut: 'GÉNÉRÉ',
+        taille: '3.5 MB',
+        auteur: 'Direction'
+      },
+      {
+        id: 7,
+        titre: 'Rapport Personnalisé - Production',
+        type: 'PERSONNALISE',
+        dateGeneration: new Date(Date.now() - 518400000),
+        statut: 'GÉNÉRÉ',
+        taille: '2.8 MB',
+        auteur: 'Chef Production'
       }
     ];
+    
+    // Initialiser le dataSource avec pagination
+    this.dataSource = new MatTableDataSource(this.rapportsGeneres);
   }
 
   /**
@@ -478,6 +562,15 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
    * 📝 CONFIRMER LA GÉNÉRATION DU RAPPORT
    */
   confirmerGenerationRapport(): void {
+    // Vérifier si le formulaire a l'erreur de date
+    if (this.nouveauRapportForm.hasError('dateInvalide')) {
+      this.snackBar.open('La date de fin doit être supérieure à la date de début', 'Fermer', {
+        duration: 4000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+    
     if (this.nouveauRapportForm.valid) {
       console.log('✅ Génération du rapport confirmée...');
       this.generationEnCours = true;
@@ -509,6 +602,10 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this.rapportsGeneres.unshift(nouveauRapport);
+        
+        // Mettre à jour le dataSource
+        this.dataSource.data = this.rapportsGeneres;
+        
         this.generationEnCours = false;
         this.fermerModaleNouveauRapport();
 
@@ -566,28 +663,47 @@ export class RapportsComponent implements OnInit, AfterViewInit, OnDestroy {
   telechargerRapport(rapport: any): void {
     console.log('⬇️ Téléchargement du rapport:', rapport.titre);
     
-    // Simuler le téléchargement
     this.snackBar.open(`Préparation du téléchargement...`, 'Fermer', {
       duration: 2000
     });
     
     setTimeout(() => {
-      // Créer un lien de téléchargement simulé
-      const element = document.createElement('a');
+      // Préparer les données du rapport pour l'export
+      const rapportData = {
+        title: rapport.titre,
+        type: rapport.type,
+        dateGeneration: rapport.dateGeneration.toLocaleDateString('fr-FR'),
+        auteur: rapport.auteur,
+        taille: rapport.taille,
+        periode: this.getPeriodeLabel(),
+        departement: this.getDepartementLabel(),
+        typeAnalyse: this.getTypeAnalyseLabel(),
+        metriques: {
+          tauxConformite: this.tauxConformiteGlobal,
+          delaiMoyen: this.delaiMoyenTraitement,
+          scorePerformance: this.scorePerformanceGlobal,
+          niveauRisque: this.niveauRisqueGlobal,
+          totalFiches: this.totalFichesQualite + this.totalFichesSuivi,
+          fichesTerminees: this.fichesQualiteTerminees + this.fichesSuiviTerminees,
+          fichesEnCours: this.fichesQualiteEnCours + this.fichesSuiviEnCours,
+          fichesEnRetard: this.fichesQualiteEnRetard + this.fichesSuiviEnRetard,
+          tendance: this.indicateurTendance
+        },
+        alertes: {
+          critiques: this.alertesCritiques,
+          importantes: this.alertesImportantes
+        },
+        statistiques: {
+          totalFichesQualite: this.totalFichesQualite,
+          totalFichesSuivi: this.totalFichesSuivi,
+          fichesTerminees: this.fichesQualiteTerminees + this.fichesSuiviTerminees,
+          fichesEnCours: this.fichesQualiteEnCours + this.fichesSuiviEnCours
+        }
+      };
+      
+      // Utiliser le service d'export pour générer un vrai PDF
       const filename = `${rapport.titre.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      // Simuler le contenu du fichier
-      const content = this.genererContenuRapport(rapport);
-      const blob = new Blob([content], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      
-      element.href = url;
-      element.download = filename;
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-      window.URL.revokeObjectURL(url);
+      this.exportService.exportCompleteDashboardReport(rapportData, filename);
       
       this.snackBar.open(`Rapport "${rapport.titre}" téléchargé avec succès`, 'Fermer', {
         duration: 3000,
@@ -676,6 +792,10 @@ Généré automatiquement par le système Suivi Qualité
     };
     
     this.rapportsGeneres.unshift(rapportDuplique);
+    
+    // Mettre à jour le dataSource
+    this.dataSource.data = this.rapportsGeneres;
+    
     this.snackBar.open('Rapport dupliqué avec succès', 'Fermer', {
       duration: 2000,
       panelClass: ['success-snackbar']
@@ -695,6 +815,10 @@ Généré automatiquement par le système Suivi Qualité
     const index = this.rapportsGeneres.indexOf(rapport);
     if (index > -1) {
       this.rapportsGeneres.splice(index, 1);
+      
+      // Mettre à jour le dataSource
+      this.dataSource.data = this.rapportsGeneres;
+      
       this.snackBar.open('Rapport supprimé', 'Annuler', {
         duration: 3000,
         panelClass: ['warning-snackbar']
